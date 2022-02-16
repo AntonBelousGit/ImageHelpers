@@ -11,12 +11,14 @@ class StorageHelper
     private $file;
     private $model;
     private $filename;
+    private $path;
 
-    public function __construct($fieldName, $file,$model)
+    public function __construct($fieldName,$path, $file, $model)
     {
         $this->fieldName = $fieldName;
         $this->file = $file;
         $this->model = $model;
+        $this->path = $path;
 
     }
 
@@ -24,19 +26,20 @@ class StorageHelper
     {
         $fieldName = $this->fieldName;
         if ($this->file) {
-            $this->fieldName = md5(uniqid()) . '.' . $this->file->getClientOriginalExtension();
-        } elseif ($this->model->$fieldName) {
+            $this->filename = md5(uniqid('', true)) . '.' . $this->file->getClientOriginalExtension();
+        } elseif ($this->model && $this->model->$fieldName) {
             $this->filename = $this->model->$fieldName;
         } else {
             $this->filename = null;
         }
+        return $this;
     }
 
     public function saveImage()
     {
         $this->checkFile();
         if ($this->file) {
-            Storage::putFileAs('/public', $this->file, $this->filename);
+            Storage::putFileAs('/public/'.$this->path, $this->file, $this->filename);
             $this->destroyImage();
         }
         return $this->filename;
@@ -45,9 +48,8 @@ class StorageHelper
     public function destroyImage()
     {
         $fieldName = $this->fieldName;
-        if ($this->model->$fieldName && Storage::exists('/public/' . $this->model->$fieldName)) {
-            Storage::delete('/public/' . $this->model->$fieldName);
+        if ($this->model && $this->model->$fieldName && Storage::exists('/public/'.$this->path . $this->model->$fieldName)) {
+            Storage::delete('/public/'.$this->path . $this->model->$fieldName);
         }
     }
 }
-

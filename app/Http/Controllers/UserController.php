@@ -14,7 +14,7 @@ class UserController extends Controller
     public function __construct(Request $request)
     {
         $user_id = $request->route('user');
-        $this->storage = new StorageHelper('avatars', $request->file('file'),User::find($user_id));
+        $this->storage = new StorageHelper('avatars','users', $request->file('file'),User::find($user_id));
     }
 
     /**
