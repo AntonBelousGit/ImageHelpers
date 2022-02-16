@@ -48,8 +48,8 @@ class StorageHelper
     public function destroyImage()
     {
         $fieldName = $this->fieldName;
-        if ($this->model && $this->model->$fieldName && Storage::exists('/public/'.$this->path . $this->model->$fieldName)) {
-            Storage::delete('/public/'.$this->path . $this->model->$fieldName);
+        if ($this->model && $this->model->$fieldName && Storage::exists('/public/'.$this->path .'/'. $this->model->$fieldName)) {
+            Storage::delete('/public/'.$this->path .'/'. $this->model->$fieldName);
         }
     }
 }
